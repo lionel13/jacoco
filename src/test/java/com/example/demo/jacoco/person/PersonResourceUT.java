@@ -31,7 +31,7 @@ public class PersonResourceUT {
     private PersonService personService;
 
     @Test
-    public void gerPersons() throws Exception {
+    public void getPersons() throws Exception {
         PersonDTO personDTO1 = new PersonDTO();
         personDTO1.setNom("Audibert");
         personDTO1.setPrenom("Lionel");

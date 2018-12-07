@@ -14,11 +14,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.example.demo.jacoco.config.MapperTestConfiguration;
-import com.example.demo.jacoco.config.TestConfiguration;
-
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = { TestConfiguration.class, MapperTestConfiguration.class })
+@ContextConfiguration(classes = { PersonService.class, PersonMapperImpl.class })
 public class PersonServiceUT {
 
     @Autowired
