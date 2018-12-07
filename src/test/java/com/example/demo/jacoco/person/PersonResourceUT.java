@@ -30,9 +30,6 @@ public class PersonResourceUT {
     @MockBean
     private PersonService personService;
 
-    @MockBean
-    private PersonMapper personMapper;
-
     @Test
     public void gerPersons() throws Exception {
         PersonDTO personDTO1 = new PersonDTO();
