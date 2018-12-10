@@ -3,10 +3,12 @@ package com.example.demo.jacoco.person;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +31,20 @@ public class PersonResourceUT {
 
     @MockBean
     private PersonService personService;
+
+    @Test
+    public void getPersonsEmpty() throws Exception {
+
+        given(personService.getPersons()).willReturn(new ArrayList<>());
+
+        this.mvc.perform(get("/api/person")
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(status().isOk());
+
+        verify(personService, times(1)).getPersons();
+        verifyNoMoreInteractions(personService);
+
+    }
 
     @Test
     public void getPersons() throws Exception {
@@ -64,6 +80,9 @@ public class PersonResourceUT {
                 .andExpect(jsonPath("$[1].mail", is(personDTO2.getMail())))
                 .andExpect(jsonPath("$[1].age", is(personDTO2.getAge())))
         ;
+
+        verify(personService, times(1)).getPersons();
+        verifyNoMoreInteractions(personService);
 
     }
 }

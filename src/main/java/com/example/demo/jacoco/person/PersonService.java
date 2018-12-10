@@ -9,11 +9,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class PersonService {
 
-    @Autowired
     private PersonRepository personRepository;
 
-    @Autowired
     private PersonMapper personMapper;
+
+    @Autowired
+    public PersonService(PersonRepository personRepository, PersonMapper personMapper) {
+        this.personRepository = personRepository;
+        this.personMapper = personMapper;
+    }
 
     public List<PersonDTO> getPersons() {
 
