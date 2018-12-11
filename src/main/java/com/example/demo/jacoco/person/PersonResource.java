@@ -2,13 +2,22 @@ package com.example.demo.jacoco.person;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.jacoco.exception.FunctionalException;
 
 @RestController
 @RequestMapping("/api/person")
@@ -21,27 +30,36 @@ public class PersonResource {
         this.personService = personService;
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<PersonDTO> getPersons() {
-
+    public ResponseEntity<List<PersonDTO>> getPersons() {
         // Récupération des informations
-        return personService.getPersons();
+        return new ResponseEntity<>(personService.getPersons(), HttpStatus.OK);
     }
 
-    public PersonDTO getPerson() {
-        throw new IllegalStateException("empty method");
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<PersonDTO> getPerson(@PathVariable long id) throws FunctionalException {
+        return new ResponseEntity<>(personService.getPerson(id), HttpStatus.OK);
     }
 
-    public PersonDTO addPerson() {
-        throw new IllegalStateException("empty method");
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Void> addPerson(
+            @Valid @RequestBody PersonDTO personDTO) {
+        personService.addPerson(personDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    public PersonDTO updatePerson() {
-        throw new IllegalStateException("empty method");
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<Void> updatePerson(
+            @Valid @RequestBody PersonDTO personDTO,
+            @PathVariable long id) throws FunctionalException {
+
+        personService.updatePerson(personDTO, id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    public void deletePerson() {
-        throw new IllegalStateException("empty method");
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePerson(@PathVariable long id) throws FunctionalException {
+        personService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

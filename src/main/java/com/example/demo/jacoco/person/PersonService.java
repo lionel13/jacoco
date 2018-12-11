@@ -19,7 +19,7 @@ public class PersonService {
         this.personMapper = personMapper;
     }
 
-    public List<PersonDTO> getPersons() {
+    List<PersonDTO> getPersons() {
 
         List<Person> personList = personRepository.findAll();
 
@@ -27,6 +27,37 @@ public class PersonService {
                 .map(personMapper::personToPersonDTO)
                 .collect(Collectors.toList());
 
+    }
+
+    public void addPerson(PersonDTO personDTO) {
+        personRepository.save(personMapper.personDTOToPerson(personDTO));
+    }
+
+    public PersonDTO getPerson(long personId) throws PersonNotFoundException {
+
+        return personRepository.findById(personId).map(
+                personMapper::personToPersonDTO)
+                .orElseThrow(() -> new PersonNotFoundException("Personne non trouvée pour l'id :: " + personId));
+
+    }
+
+    public void updatePerson(PersonDTO personDTO, long personId) throws PersonNotFoundException {
+
+        personRepository.findById(personId)
+                .orElseThrow(() -> new PersonNotFoundException("Personne non trouvée pour l'id :: " + personId));
+
+        Person personToUpdate = personMapper.personDTOToPerson(personDTO);
+        personToUpdate.setId(personId);
+        personRepository.save(personToUpdate);
+
+    }
+
+    public void delete(long personId) throws PersonNotFoundException {
+
+        Person person = personRepository.findById(personId)
+                .orElseThrow(() -> new PersonNotFoundException("Personne non trouvée pour l'id :: " + personId));
+
+        personRepository.delete(person);
     }
 
 }
