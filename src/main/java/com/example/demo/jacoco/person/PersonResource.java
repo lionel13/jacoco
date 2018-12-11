@@ -28,4 +28,20 @@ public class PersonResource {
         // Récupération des informations
         return personService.getPersons();
     }
+
+    public PersonDTO getPerson() {
+        throw new IllegalStateException("empty method");
+    }
+
+    public PersonDTO addPerson() {
+        throw new IllegalStateException("empty method");
+    }
+
+    public PersonDTO updatePerson() {
+        throw new IllegalStateException("empty method");
+    }
+
+    public void deletePerson() {
+        throw new IllegalStateException("empty method");
+    }
 }

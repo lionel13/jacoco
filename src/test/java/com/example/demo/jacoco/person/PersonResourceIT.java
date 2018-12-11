@@ -22,7 +22,6 @@ import com.example.demo.jacoco.JacocoApplication;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = JacocoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
 public class PersonResourceIT {
 
     @LocalServerPort
