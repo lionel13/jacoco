@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.jacoco.exception.FunctionalException;
+import com.example.demo.jacoco.utils.ControlResourceUtil;
 
 @RestController
 @RequestMapping("/api/person")
@@ -37,8 +37,11 @@ public class PersonResource {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<PersonDTO> getPerson(@PathVariable long id) throws FunctionalException {
-        return new ResponseEntity<>(personService.getPerson(id), HttpStatus.OK);
+    public ResponseEntity<PersonDTO> getPerson(@PathVariable String id) {
+
+        int personId = ControlResourceUtil.controlId(id);
+
+        return new ResponseEntity<>(personService.getPerson(personId), HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -51,14 +54,14 @@ public class PersonResource {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Void> updatePerson(
             @Valid @RequestBody PersonDTO personDTO,
-            @PathVariable long id) throws FunctionalException {
+            @PathVariable long id) {
 
         personService.updatePerson(personDTO, id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePerson(@PathVariable long id) throws FunctionalException {
+    public ResponseEntity<Void> deletePerson(@PathVariable long id) {
         personService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

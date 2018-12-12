@@ -1,14 +1,13 @@
 package com.example.demo.jacoco.style;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 @Service
 public class StyleService {
-
 
     private StyleRepository styleRepository;
 
@@ -22,7 +21,7 @@ public class StyleService {
 
     public List<StyleDTO> getStyles() {
 
-        List<Style>  styleList = styleRepository.findAll();
+        List<Style> styleList = styleRepository.findAll();
 
         return styleList.stream()
                 .map(styleMapper::styleToStyleDTO)
@@ -30,4 +29,9 @@ public class StyleService {
 
     }
 
+    public StyleDTO getStyle(long styleId) {
+        return styleRepository.findById(styleId).map(
+                styleMapper::styleToStyleDTO)
+                .orElseThrow(() -> new StyleNotFoundException(styleId));
+    }
 }
