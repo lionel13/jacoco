@@ -9,6 +9,16 @@ public class ResourceNotFoundException extends ResponseStatusException {
     /**
      * Quelle classe remonte l'exception.
      */
+    private final Class entite;
+
+    /**
+     * Quelle classe remonte l'exception.
+     */
+    private final long id;
+
+    /**
+     * Quelle classe remonte l'exception.
+     */
     private final String className;
 
     /**
@@ -16,10 +26,15 @@ public class ResourceNotFoundException extends ResponseStatusException {
      */
     private final String methodName;
 
-    public ResourceNotFoundException(String reason) {
-        super(NOT_FOUND, reason);
+    public ResourceNotFoundException(Class entite, long entiteId) {
+
+        super(NOT_FOUND, entite.getSimpleName() + " non trouvé pour l'id " + entiteId);
+
         this.className = this.getStackTrace()[0].getClassName();
         this.methodName = this.getStackTrace()[0].getMethodName();
+        this.id = entiteId;
+        this.entite = entite;
+
     }
 
     /**
@@ -34,6 +49,10 @@ public class ResourceNotFoundException extends ResponseStatusException {
         result.append(this.className);
         result.append(", methodName : ");
         result.append(this.methodName);
+        result.append(", entite : ");
+        result.append(this.entite.getSimpleName());
+        result.append(", id : ");
+        result.append(this.id);
         result.append(", message : ");
         result.append(this.getReason());
         result.append(", cause : ");

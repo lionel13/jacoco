@@ -10,16 +10,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.method.HandlerMethod;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity resourceNotFoundException(ResponseStatusException ex, HttpServletRequest request) {
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity resourceNotFoundException(ResourceNotFoundException ex, HttpServletRequest request, HandlerMethod handlerMethod) {
+
         LOG.error("Exception fonctionnelle interceptée par GlobalExceptionHandler : {} {}", ex.getClass().getSimpleName(), ex.toString());
+
         ErrorDTO errorDetails = new ErrorDTO(new Date(), ex.getReason(), request.getRequestURI());
         return new ResponseEntity<>(errorDetails, ex.getStatus());
     }
@@ -29,4 +31,5 @@ public class GlobalExceptionHandler {
         ErrorDTO errorDetails = new ErrorDTO(new Date(), ex.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }

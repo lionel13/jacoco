@@ -21,41 +21,42 @@ public class PersonService {
 
     List<PersonDTO> getPersons() {
 
-        List<Person> personList = personRepository.findAll();
-
-        return personList.stream()
+        return personRepository.findAll().stream()
                 .map(personMapper::personToPersonDTO)
                 .collect(Collectors.toList());
 
     }
 
-    public void addPerson(PersonDTO personDTO) {
-        personRepository.save(personMapper.personDTOToPerson(personDTO));
-    }
-
-    public PersonDTO getPerson(long personId) throws PersonNotFoundException {
+    public PersonDTO getPerson(long personId) {
 
         return personRepository.findById(personId).map(
                 personMapper::personToPersonDTO)
-                .orElseThrow(() -> new PersonNotFoundException("Personne non trouvée pour l'id :: " + personId));
+                .orElseThrow(() -> new PersonNotFoundException(personId));
 
     }
 
-    public void updatePerson(PersonDTO personDTO, long personId) throws PersonNotFoundException {
+    public PersonDTO addPerson(PersonDTO personDTO) {
+        Person person = personRepository.saveAndFlush(personMapper.personDTOToPerson(personDTO));
 
-        personRepository.findById(personId)
-                .orElseThrow(() -> new PersonNotFoundException("Personne non trouvée pour l'id :: " + personId));
-
-        Person personToUpdate = personMapper.personDTOToPerson(personDTO);
-        personToUpdate.setId(personId);
-        personRepository.save(personToUpdate);
+        return personMapper.personToPersonDTO(person);
 
     }
 
-    public void delete(long personId) throws PersonNotFoundException {
+    public PersonDTO updatePerson(PersonDTO personDTO, long personId) {
+
+        return personRepository.findById(personId)
+                .map(person -> {
+                    Person personToUpdate = personMapper.personDTOToPerson(personDTO);
+                    return personMapper.personToPersonDTO(personRepository.save(personToUpdate));
+                })
+                .orElseThrow(() -> new PersonNotFoundException(personId));
+
+    }
+
+    public void delete(long personId) {
 
         Person person = personRepository.findById(personId)
-                .orElseThrow(() -> new PersonNotFoundException("Personne non trouvée pour l'id :: " + personId));
+                .orElseThrow(() -> new PersonNotFoundException(personId));
 
         personRepository.delete(person);
     }
