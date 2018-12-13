@@ -2,14 +2,13 @@ package com.example.demo.jacoco.exception;
 
 import java.util.Date;
 
-public class ErrorDetails {
+public class ErrorDTO {
 
     private Date timestamp;
     private String message;
     private String details;
 
-    public ErrorDetails(Date timestamp, String message, String details) {
-        super();
+    public ErrorDTO(Date timestamp, String message, String details) {
         this.timestamp = timestamp;
         this.message = message;
         this.details = details;

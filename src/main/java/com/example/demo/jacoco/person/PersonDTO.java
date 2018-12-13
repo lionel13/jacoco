@@ -7,11 +7,20 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class PersonDTO {
 
+    private String id;
     private String nom;
     private String prenom;
     private String civilite;
     private String mail;
     private Integer age;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNom() {
         return nom;
@@ -63,6 +72,7 @@ public class PersonDTO {
         PersonDTO personDTO = (PersonDTO) o;
 
         return new EqualsBuilder()
+                .append(id, personDTO.id)
                 .append(nom, personDTO.nom)
                 .append(prenom, personDTO.prenom)
                 .append(civilite, personDTO.civilite)
@@ -73,6 +83,7 @@ public class PersonDTO {
 
     @Override public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(id)
                 .append(nom)
                 .append(prenom)
                 .append(civilite)
