@@ -7,14 +7,14 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class StyleDTO {
 
-    private Long id;
+    private String id;
     private String nom;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -28,9 +28,11 @@ public class StyleDTO {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o)
+            return true;
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         StyleDTO style = (StyleDTO) o;
 
@@ -47,8 +49,6 @@ public class StyleDTO {
                 .append(nom)
                 .toHashCode();
     }
-
-
 
     @Override public String toString() {
         return ReflectionToStringBuilder.toString(

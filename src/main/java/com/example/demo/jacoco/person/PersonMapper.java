@@ -7,4 +7,5 @@ public interface PersonMapper {
     PersonDTO personToPersonDTO(Person person);
 
     Person personDTOToPerson(PersonDTO personDTO);
+
 }

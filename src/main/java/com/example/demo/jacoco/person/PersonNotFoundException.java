@@ -8,7 +8,9 @@ import com.example.demo.jacoco.exception.ResourceNotFoundException;
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class PersonNotFoundException extends ResourceNotFoundException {
 
-    public PersonNotFoundException(String message) {
-        super(message);
+    public PersonNotFoundException(long personId) {
+        super(Person.class, personId);
+
     }
+
 }

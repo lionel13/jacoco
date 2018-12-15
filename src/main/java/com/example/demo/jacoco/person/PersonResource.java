@@ -1,10 +1,15 @@
 package com.example.demo.jacoco.person;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +22,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.jacoco.exception.FunctionalException;
+import com.example.demo.jacoco.utils.ControlResourceUtil;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/api/person")
@@ -25,40 +33,59 @@ public class PersonResource {
 
     private PersonService personService;
 
-    @Autowired
-    public PersonResource(PersonService personService) {
+    private final PersonResourceAssembler personResourceAssembler;
+
+    public PersonResource(PersonService personService, PersonResourceAssembler personResourceAssembler) {
         this.personService = personService;
+        this.personResourceAssembler = personResourceAssembler;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<PersonDTO>> getPersons() {
-        // Récupération des informations
-        return new ResponseEntity<>(personService.getPersons(), HttpStatus.OK);
+    public Resources<Resource<PersonDTO>> getPersons() {
+
+        List<PersonDTO> persons = personService.getPersons();
+
+        List<Resource<PersonDTO>> persons1 = persons.stream()
+                .map(personResourceAssembler::toResource)
+                .collect(Collectors.toList());
+
+        return new Resources<>(persons1,
+                linkTo(methodOn(PersonResource.class).getPersons()).withSelfRel());
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<PersonDTO> getPerson(@PathVariable long id) throws FunctionalException {
-        return new ResponseEntity<>(personService.getPerson(id), HttpStatus.OK);
+    public Resource<PersonDTO> getPerson(@PathVariable String id) {
+
+        int personId = ControlResourceUtil.controlId(id);
+        PersonDTO person = personService.getPerson(personId);
+
+        return personResourceAssembler.toResource(person);
+
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Void> addPerson(
-            @Valid @RequestBody PersonDTO personDTO) {
-        personService.addPerson(personDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<Resource<PersonDTO>> addPerson(
+            @RequestBody PersonDTO personDTO) throws URISyntaxException {
+        PersonDTO addedPerson = personService.addPerson(personDTO);
+
+        Resource<PersonDTO> resource = personResourceAssembler.toResource(addedPerson);
+
+        return ResponseEntity
+                .created(new URI(resource.getId().expand().getHref()))
+                .body(resource);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Void> updatePerson(
-            @Valid @RequestBody PersonDTO personDTO,
-            @PathVariable long id) throws FunctionalException {
+    public Resource<PersonDTO> updatePerson(
+            @RequestBody PersonDTO personDTO,
+            @PathVariable long id) {
 
-        personService.updatePerson(personDTO, id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        PersonDTO updatedPerson = personService.updatePerson(personDTO, id);
+        return personResourceAssembler.toResource(updatedPerson);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePerson(@PathVariable long id) throws FunctionalException {
+    public ResponseEntity<Void> deletePerson(@PathVariable long id) {
         personService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
