@@ -4,10 +4,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.validator.constraints.Length;
 
 public class PersonDTO {
 
+    @Length(max = 32)
     private String nom;
+    @Length(max = 32)
     private String prenom;
     private String civilite;
     private String mail;

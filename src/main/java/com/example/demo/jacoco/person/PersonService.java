@@ -37,14 +37,14 @@ public class PersonService {
 
         return personRepository.findById(personId).map(
                 personMapper::personToPersonDTO)
-                .orElseThrow(() -> new PersonNotFoundException("Personne non trouvée pour l'id :: " + personId));
+                .orElseThrow(() -> new PersonNotFoundException(personId));
 
     }
 
     public void updatePerson(PersonDTO personDTO, long personId) throws PersonNotFoundException {
 
         personRepository.findById(personId)
-                .orElseThrow(() -> new PersonNotFoundException("Personne non trouvée pour l'id :: " + personId));
+                .orElseThrow(() -> new PersonNotFoundException(personId));
 
         Person personToUpdate = personMapper.personDTOToPerson(personDTO);
         personToUpdate.setId(personId);
@@ -55,7 +55,7 @@ public class PersonService {
     public void delete(long personId) throws PersonNotFoundException {
 
         Person person = personRepository.findById(personId)
-                .orElseThrow(() -> new PersonNotFoundException("Personne non trouvée pour l'id :: " + personId));
+                .orElseThrow(() -> new PersonNotFoundException(personId));
 
         personRepository.delete(person);
     }

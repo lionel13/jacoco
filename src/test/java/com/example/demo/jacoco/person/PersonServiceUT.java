@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -18,8 +17,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ContextConfiguration(classes = { PersonService.class, PersonMapperImpl.class })
 public class PersonServiceUT {
 
-    @Autowired
-    PersonService personService;
+    private PersonService personService;
+
+    public PersonServiceUT(PersonService personService) {
+        this.personService = personService;
+    }
 
     @MockBean
     private PersonRepository personRepository;

@@ -7,7 +7,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.jacoco.exception.FunctionalException;
@@ -30,36 +30,39 @@ public class PersonResource {
         this.personService = personService;
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<PersonDTO>> getPersons() {
-        // Récupération des informations
-        return new ResponseEntity<>(personService.getPersons(), HttpStatus.OK);
+    public List<PersonDTO> getPersons() {
+
+        return personService.getPersons();
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<PersonDTO> getPerson(@PathVariable long id) throws FunctionalException {
-        return new ResponseEntity<>(personService.getPerson(id), HttpStatus.OK);
+    public PersonDTO getPerson(@PathVariable long id) throws FunctionalException {
+
+        return personService.getPerson(id);
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Void> addPerson(
-            @Valid @RequestBody PersonDTO personDTO) {
+    public void addPerson(@Valid @RequestBody PersonDTO personDTO) {
         personService.addPerson(personDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Void> updatePerson(
+    public void updatePerson(
             @Valid @RequestBody PersonDTO personDTO,
             @PathVariable long id) throws FunctionalException {
 
         personService.updatePerson(personDTO, id);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePerson(@PathVariable long id) throws FunctionalException {
+    public void deletePerson(@PathVariable long id) throws FunctionalException {
+
         personService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
