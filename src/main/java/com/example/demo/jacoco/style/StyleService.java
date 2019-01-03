@@ -22,7 +22,7 @@ public class StyleService {
 
     public List<StyleDTO> getStyles() {
 
-        List<Style>  styleList = styleRepository.findAll();
+        List<Style> styleList = styleRepository.findAll();
 
         return styleList.stream()
                 .map(styleMapper::styleToStyleDTO)
@@ -30,4 +30,8 @@ public class StyleService {
 
     }
 
+
+    public void addStyle(StyleDTO styleDTO) {
+        styleRepository.save(styleMapper.styleDTOToStyle(styleDTO));
+    }
 }

@@ -9,13 +9,13 @@ spring:
         username: sa
         password:
 
+spring.jpa.hibernate.ddl-auto: create-drop
 
 jpa:
     show-sql: true
     hibernate.ddl-auto: update
     properties.hibernate.dialect: org.hibernate.dialect.H2Dialect
-
-    #logging:
-    #    level:
-    #        org.hibernate.sql: DEBUG
-    #        org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    logging:
+        level:
+            org.hibernate.sql: DEBUG
+            org.hibernate.type.descriptor.sql.BasicBinder: TRACE

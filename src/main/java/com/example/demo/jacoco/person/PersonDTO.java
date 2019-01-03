@@ -1,20 +1,45 @@
 package com.example.demo.jacoco.person;
 
+import com.example.demo.jacoco.domain.CiviliteEnum;
+import com.example.demo.jacoco.model.AuditableDTO;
+import com.example.demo.jacoco.utils.validator.Date;
+import com.example.demo.jacoco.utils.validator.Enum;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.validator.constraints.Length;
 
-public class PersonDTO {
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
-    @Length(max = 32)
+public class PersonDTO extends AuditableDTO {
+
+    private String id;
+
+    @Size(max = 32)
+    @NotEmpty
     private String nom;
-    @Length(max = 32)
+    @Size(max = 32)
+    @NotEmpty
     private String prenom;
+    @Enum(enumClass = CiviliteEnum.class)
     private String civilite;
+    @Email
     private String mail;
-    private Integer age;
+    @Pattern(regexp = "^[1-9]\\d*$", message = "L'age doit être un nombre positif")
+    private String age;
+    @Date
+    private String birthday;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getNom() {
         return nom;
@@ -48,15 +73,24 @@ public class PersonDTO {
         this.mail = mail;
     }
 
-    public Integer getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(String age) {
         this.age = age;
     }
 
-    @Override public boolean equals(Object o) {
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    @Override
+    public boolean equals(Object o) {
         if (this == o)
             return true;
 
@@ -74,7 +108,8 @@ public class PersonDTO {
                 .isEquals();
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(nom)
                 .append(prenom)
@@ -84,7 +119,8 @@ public class PersonDTO {
                 .toHashCode();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return ReflectionToStringBuilder.toString(
                 this,
                 ToStringStyle.MULTI_LINE_STYLE,

@@ -1,18 +1,6 @@
 package com.example.demo.jacoco.person;
 
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.core.Is.is;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
+import com.example.demo.jacoco.util.RandomObjectFiller;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +9,19 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(PersonResource.class)
@@ -31,6 +32,16 @@ public class PersonResourceUT {
 
     @MockBean
     private PersonService personService;
+
+    @Test
+    public void test() throws Exception {
+        RandomObjectFiller randomObjectFiller = new RandomObjectFiller();
+
+        Person andFill = randomObjectFiller.createAndFill(Person.class);
+
+        System.out.println(andFill);
+    }
+
 
     @Test
     public void getPersonsEmpty() throws Exception {
@@ -53,13 +64,13 @@ public class PersonResourceUT {
         personDTO1.setPrenom("Lionel");
         personDTO1.setCivilite("MONSIEUR");
         personDTO1.setMail("l.audibert@free.fr");
-        personDTO1.setAge(31);
+        personDTO1.setAge("31");
         PersonDTO personDTO2 = new PersonDTO();
         personDTO2.setNom("Jane");
         personDTO2.setPrenom("Doe");
         personDTO2.setCivilite("MADAME");
         personDTO2.setMail("j.doe@zaza.fr");
-        personDTO2.setAge(55);
+        personDTO2.setAge("55");
 
         List<PersonDTO> personDTOs = Collections.unmodifiableList(Arrays.asList(personDTO1, personDTO2));
 
@@ -85,4 +96,5 @@ public class PersonResourceUT {
         verifyNoMoreInteractions(personService);
 
     }
+
 }

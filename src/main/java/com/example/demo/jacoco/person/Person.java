@@ -1,19 +1,17 @@
 package com.example.demo.jacoco.person;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import com.example.demo.jacoco.model.Auditable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.persistence.*;
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "m_person")
-public class Person {
+public class Person extends Auditable<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +21,7 @@ public class Person {
     private String civilite;
     private String mail;
     private Integer age;
+    private LocalDate birthday;
 
     public Long getId() {
         return id;
@@ -72,7 +71,16 @@ public class Person {
         this.age = age;
     }
 
-    @Override public boolean equals(Object o) {
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    @Override
+    public boolean equals(Object o) {
         if (this == o)
             return true;
 
@@ -91,7 +99,8 @@ public class Person {
                 .isEquals();
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(nom)
@@ -102,7 +111,8 @@ public class Person {
                 .toHashCode();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return ReflectionToStringBuilder.toString(
                 this,
                 ToStringStyle.MULTI_LINE_STYLE,

@@ -3,6 +3,7 @@ package com.example.demo.jacoco.exception;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,16 @@ public class GlobalExceptionHandler {
         final ErrorDTO errorDTO = handleFieldErrors(result.getFieldErrors());
         LOG.error("Erreur REST de validation {} : {}", HttpStatus.BAD_REQUEST, errorDTO);
         return errorDTO;
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDTO handleInvalidFormatException(InvalidFormatException ex) {
+//        final BindingResult result = ex.getBindingResult();
+//        final ErrorDTO errorDTO = handleFieldErrors(result.getFieldErrors());
+//        LOG.error("Erreur REST de validation {} : {}", HttpStatus.BAD_REQUEST, errorDTO);
+//        return errorDTO;
+        return new ErrorDTO();
     }
 
     private ErrorDTO handleFieldErrors(List<FieldError> fieldErrors) {
